@@ -1,5 +1,5 @@
 from django.db import models
-
+from PIL import Image
 
 STATUS_CHOICES = (
     ('publish', 'Publish'),
@@ -15,6 +15,15 @@ class Photo(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+    def save(self, *args, **kwargs):
+        super().save()
+        image = Image.open(self.photo.path)
+
+        if image.height > 1000 or image.width > 1000:
+            output_size = (1000, 1000)
+            image.thumbnail(output_size)
+            image.save(self.photo.path)
 
     class Meta:
         ordering = ('-created_at',)
