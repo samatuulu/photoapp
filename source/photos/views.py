@@ -5,5 +5,8 @@ from photos.serializers import PhotoSerializer
 
 
 class PhotoViewSet(viewsets.ModelViewSet):
-    queryset = Photo.objects.all()
     serializer_class = PhotoSerializer
+
+    def get_queryset(self):
+        queryset = Photo.objects.filter(author=self.request.user)
+        return queryset

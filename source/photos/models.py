@@ -12,6 +12,8 @@ class Photo(models.Model):
     caption = models.TextField(max_length=2000)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=40, choices=STATUS_CHOICES, default=STATUS_CHOICES[0][0])
+    author = models.ForeignKey('auth.User', related_name='photo', on_delete=models.CASCADE,
+                               null=True, blank=True, verbose_name='Author')
 
     def __str__(self):
         return str(self.id)

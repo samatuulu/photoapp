@@ -4,7 +4,7 @@ from rest_framework import routers
 from photos.views import PhotoViewSet
 
 router = routers.DefaultRouter()
-router.register(r'photos', PhotoViewSet)
+router.register(r'photos', PhotoViewSet, basename='photos')
 
 app_name = 'api_v1'
 
