@@ -14,6 +14,7 @@ class Photo(models.Model):
     status = models.CharField(max_length=40, choices=STATUS_CHOICES, default=STATUS_CHOICES[0][0])
     author = models.ForeignKey('auth.User', related_name='photo', on_delete=models.CASCADE,
                                null=True, blank=True, verbose_name='Author')
+    tags = models.ManyToManyField('photos.Tag', blank=True)
 
     def __str__(self):
         return str(self.id)
@@ -29,3 +30,10 @@ class Photo(models.Model):
 
     class Meta:
         ordering = ('-created_at',)
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=30, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
