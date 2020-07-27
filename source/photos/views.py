@@ -1,16 +1,24 @@
 import re
 from rest_framework import viewsets, status
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
-from rest_framework import generics
+from rest_framework import generics, permissions
 
 from photos.models import Photo, Tag
 from photos.serializers import PhotoSerializer
 
 
+class IsOwner(permissions.BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        return obj.author == request.user
+
+
 class PhotoViewSet(viewsets.ModelViewSet):
     queryset = Photo.objects.all()
     serializer_class = PhotoSerializer
+    permission_classes = (IsOwner,)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -26,7 +34,16 @@ class PhotoViewSet(viewsets.ModelViewSet):
                     tag_list.append(obj)
                 instance.tags.set(tag_list)
             return Response(serializer.data)
-        return Response({serializer.errors, status.HTTP_400_BAD_REQUEST})
+        return Response({'detail': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated:
+            return Photo.objects.filter(author=user)
+        return PermissionDenied()
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 
 class TagListView(generics.ListAPIView):
