@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework import routers
 
-from photos.views import PhotoViewSet, TagListView, PhotoCreateAPIView
+from source.photos.views import PhotoViewSet, TagListView, PhotoCreateAPIView
 
 router = routers.DefaultRouter()
 router.register(r'photos', PhotoViewSet, basename='photos')

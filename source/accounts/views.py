@@ -3,7 +3,7 @@ from rest_framework import permissions, decorators, status
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from accounts.serializers import UserCreateSerializer
+from source.accounts.serializers import UserCreateSerializer
 
 User = get_user_model()
 

@@ -5,8 +5,8 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import generics, permissions
 
-from photos.models import Photo, Tag
-from photos.serializers import PhotoSerializer
+from source.photos.models import Photo, Tag
+from source.photos.serializers import PhotoSerializer
 
 
 class IsOwner(permissions.BasePermission):
