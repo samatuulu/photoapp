@@ -1,5 +1,5 @@
 from django.db import models
-from PIL import Image
+from rest_framework.exceptions import ValidationError
 
 STATUS_CHOICES = (
     ('publish', 'Publish'),
@@ -20,13 +20,10 @@ class Photo(models.Model):
         return str(self.id)
 
     def save(self, *args, **kwargs):
-        super().save()
-        image = Image.open(self.photo.path)
-
-        if image.height > 1000 or image.width > 1000:
-            output_size = (1000, 1000)
-            image.thumbnail(output_size)
-            image.save(self.photo.path)
+        limit = 2 * 1024 * 1024
+        if self.photo.size > limit:
+            raise ValidationError('File too large. Note: Size should not exeed 2Mb.')
+        super(Photo, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ('-created_at',)

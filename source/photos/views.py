@@ -53,3 +53,18 @@ class TagListView(generics.ListAPIView):
         hashtag_id = get_object_or_404(Tag, pk=self.kwargs['pk'])
         caption = Photo.objects.filter(caption__icontains=hashtag_id)
         return caption
+
+
+class PhotoCreateAPIView(generics.CreateAPIView):
+    queryset = Photo.objects.all()
+    serializer_class = PhotoSerializer
+    permission_classes = (IsOwner,)
+
+    def create(self, request, *args, **kwargs):
+        serializers = self.get_serializer(data=request.data)
+        if serializers.is_valid():
+            for photo in request.FILES.getlist('photo'):
+                obj = Photo.objects.create(photo=photo, caption=serializers.data['caption'], author=self.request.user)
+                serializers = PhotoSerializer(obj)
+            return Response(serializers.data)
+        return Response({'detail': serializers.errors}, status=status.HTTP_400_BAD_REQUEST)

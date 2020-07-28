@@ -36,9 +36,7 @@ on top of the list.  So `class Meta` acts as configuration and keeps configurati
 - Limit the uploaded photo size to a certain maximum dimensions and bytes.
 
 The directory `source/photos/models.py`. Inside the file `models.py`, I override the method `save`.
-In this case, the method saves only image in specific settings. If the image size (height, width)
-is more then 1000 height and width then the image will be saved as given parameter in variable `output_size`.
-In this way, I can limit the image size.
+In this case, the method saves only image in specific settings.
 
 - JWT authentication
 
@@ -87,4 +85,10 @@ The next functionality is...
 
 For this task, I override the method `create` inside the class `PhotoViewSet`. The main idea of `create` method is
 when the `Photo` object created after that with the help of regular expression, I get all the tags from the caption and
-save it to the other model Tag.  For creating tags, I used `get_or_create`, for the reason not saving the same tag again and again.
+save it to the other model Tag.  For creating tags, I used `get_or_create`, 
+for the reason not saving the same tag again and again.
+
+- Implement batch upload, edit, delete, publish API for photos
+
+For now only upload feature works for photos. By sending a post request to the
+<a href="http://localhost:8000/api/v1/add/photos/">endpoint</a>  users can send multiple images.
